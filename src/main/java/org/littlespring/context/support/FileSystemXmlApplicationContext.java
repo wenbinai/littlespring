@@ -1,27 +1,24 @@
 package org.littlespring.context.support;
 
-
 import org.littlespring.beans.factory.support.DefaultBeanFactory;
 import org.littlespring.beans.factory.xml.XmlBeanDefinitionReader;
 import org.littlespring.context.ApplicationContext;
-import org.littlespring.core.io.ClassPathResource;
+import org.littlespring.core.io.FileSystemResource;
 import org.littlespring.core.io.Resource;
 
-public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
-    public ClassPathXmlApplicationContext(String configFile) {
+public class FileSystemXmlApplicationContext extends AbstractApplicationContext {
+
+    public FileSystemXmlApplicationContext(String configFile) {
         super(configFile);
     }
 
-//    private DefaultBeanFactory factory = null;
-//
-//    public ClassPathXmlApplicationContext(String configFile) {
+//    public FileSystemXmlApplicationContext(String configFile) {
 //        factory = new DefaultBeanFactory();
 //        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
-//        Resource resource = new ClassPathResource(configFile);
-////        reader.loadBeanDefinitions(configFile);
+//        Resource resource = new FileSystemResource(configFile);
+////        reader.loadBeanDefinitions(resource);
 //        reader.loadBeanDefinitionsRefactor(resource);
 //    }
-//
 //
 //    @Override
 //    public Object getBean(String beanID) {
@@ -30,7 +27,6 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
     @Override
     protected Resource getResourceByPath(String path) {
-        Resource resource = new ClassPathResource(path);
-        return resource;
+        return new FileSystemResource(path);
     }
 }

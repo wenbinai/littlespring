@@ -23,9 +23,9 @@ public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry {
     }
 
 
-    public DefaultBeanFactory(String configFile) {
-//        loadBeanDefinition(configFile);
-    }
+//    public DefaultBeanFactory(String configFile) {
+////        loadBeanDefinition(configFile);
+//    }
 
 //    private void loadBeanDefinition(String configFile) {
 //        InputStream is = null;

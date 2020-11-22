@@ -7,6 +7,7 @@ import org.dom4j.io.SAXReader;
 import org.littlespring.beans.factory.BeanDefinitionStoreException;
 import org.littlespring.beans.factory.support.BeanDefinitionRegistry;
 import org.littlespring.beans.factory.support.GenericBeanDefinition;
+import org.littlespring.core.io.Resource;
 import org.littlespring.util.ClassUtils;
 
 import java.io.IOException;
@@ -50,6 +51,35 @@ public class XmlBeanDefinitionReader {
             throw new BeanDefinitionStoreException("parse xml exception");
         } finally {
             if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void loadBeanDefinitionsRefactor(Resource resource) {
+        InputStream is = null;
+        try {
+            is = resource.getInputStream();
+            SAXReader reader = new SAXReader();
+            Document doc = reader.read(is);
+
+            Element root = doc.getRootElement();
+            Iterator<Element> iter = root.elementIterator();
+            while (iter.hasNext()) {
+                Element ele = iter.next();
+                String id = ele.attributeValue(ID_ATTRIBUTE);
+                String beanClassName = ele.attributeValue(NAME_ATTRIBUTE);
+                GenericBeanDefinition bd = new GenericBeanDefinition(id, beanClassName);
+                this.registry.registerBeanDefinition(id, bd);
+            }
+        } catch (Exception e) {
+            throw new BeanDefinitionStoreException("parse xml exception");
+        } finally {
+            if(is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
