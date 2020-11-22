@@ -42,17 +42,20 @@ public class BeanFactoryTest {
         Assert.fail("expect BeanCreationException");
     }
 
-//    /**
-//     * 测试xml文件名不对情况
-//     */
-//    @Test
-//    public void testInvalidXML() {
-//        try {
-//            new DefaultBeanFactory("xxx.xml");
-//        } catch (BeanDefinitionStoreException e) {
-//            return;
-//        }
-//
-//        Assert.fail("expect BeanDefinitionStoreException");
-//    }
+
+    /**
+     * 测试xml文件不存在的情况
+     */
+    @Test
+    public void testInvalidXML() {
+        try {
+            new DefaultBeanFactory("xxx.xml");
+        } catch (BeanDefinitionStoreException e) {
+            return;
+        }
+
+        Assert.fail("fail");
+    }
+
+
 }
