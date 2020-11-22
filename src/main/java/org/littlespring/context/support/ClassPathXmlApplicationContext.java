@@ -30,7 +30,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
     @Override
     protected Resource getResourceByPath(String path) {
-        Resource resource = new ClassPathResource(path);
+        Resource resource = new ClassPathResource(path, this.getBeanClassLoader());
         return resource;
     }
 }
