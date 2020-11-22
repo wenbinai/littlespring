@@ -5,6 +5,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.littlespring.beans.BeanDefinition;
+import org.littlespring.beans.factory.BeanCreationException;
+import org.littlespring.beans.factory.BeanDefinitionStoreException;
 import org.littlespring.beans.factory.BeanFactory;
 import org.littlespring.util.ClassUtils;
 
@@ -45,7 +47,7 @@ public class DefaultBeanFactory implements BeanFactory {
         } catch (DocumentException e) {
             e.printStackTrace();
         } finally {
-            if(is != null) {
+            if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
@@ -63,21 +65,16 @@ public class DefaultBeanFactory implements BeanFactory {
     @Override
     public Object getBean(String beanID) {
         BeanDefinition bd = this.getBeanDefinition(beanID);
-        if(bd == null) {
-            return null;
+        if (bd == null) {
+            throw new BeanCreationException("create bean error");
         }
-        ClassLoader cl =ClassUtils.getDefaultClassLoader();
+        ClassLoader cl = ClassUtils.getDefaultClassLoader();
         String beanClassName = bd.getBeanClassName();
         try {
-            Class<?> clz =  cl.loadClass(beanClassName);
+            Class<?> clz = cl.loadClass(beanClassName);
             return clz.newInstance();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new BeanCreationException("create bean error", e);
         }
-        return null;
     }
 }
