@@ -1,6 +1,7 @@
 package org.littlespring.test.v1;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.littlespring.beans.BeanDefinition;
 import org.littlespring.beans.factory.BeanCreationException;
@@ -9,6 +10,7 @@ import org.littlespring.beans.factory.support.DefaultBeanFactory;
 import org.littlespring.beans.factory.xml.XmlBeanDefinitionReader;
 import org.littlespring.service.v1.PetStoreService;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class BeanFactoryTest {
@@ -27,6 +29,17 @@ public class BeanFactoryTest {
 //        assertNotNull(petStore);
 //    }
 
+    DefaultBeanFactory factory = null;
+    XmlBeanDefinitionReader reader = null;
+
+    /**
+     * 每个测试用例都运行一遍, 一般为配置代码
+     */
+    @Before
+    public void setUP() {
+        factory = new DefaultBeanFactory();
+        reader = new XmlBeanDefinitionReader(factory);
+    }
 
 
     /**
@@ -34,13 +47,12 @@ public class BeanFactoryTest {
      */
     @Test
     public void testGetBeanRefactor() {
-        DefaultBeanFactory factory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+
         reader.loadBeanDefinitions("petstore-v1.xml");
 
         BeanDefinition bd = factory.getBeanDefinition("petStore");
 
-//        assertEquals("org.littlespring.service.v1.PetStoreService", bd.getBeanClassName());
+        assertEquals("org.littlespring.service.v1.PetStoreService", bd.getBeanClassName());
         PetStoreService petStore = (PetStoreService) factory.getBean("petStore");
 
         assertNotNull(petStore);
@@ -51,8 +63,7 @@ public class BeanFactoryTest {
      */
     @Test
     public void testInvalidBean() {
-        DefaultBeanFactory factory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+
         reader.loadBeanDefinitions("petstore-v1.xml");
 
         try {
@@ -70,8 +81,7 @@ public class BeanFactoryTest {
      */
     @Test
     public void testInvalidXML() {
-        DefaultBeanFactory factory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+
         try {
             reader.loadBeanDefinitions("xxx.xml");
         } catch (BeanDefinitionStoreException e) {
