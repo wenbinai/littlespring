@@ -57,7 +57,6 @@ public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry {
 //        }
 //    }
 
-    @Override
     public BeanDefinition getBeanDefinition(String beanID) {
         return this.beanDefinitionMap.get(beanID);
     }
