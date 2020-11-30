@@ -9,7 +9,8 @@ import org.littlespring.util.ClassUtils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry, ConfigurableBeanFactory {
+public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
+        implements BeanFactory, BeanDefinitionRegistry, ConfigurableBeanFactory {
 
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
     private ClassLoader beanClassLoader;
@@ -69,13 +70,36 @@ public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry, 
         if (bd == null) {
             throw new BeanCreationException("create bean error");
         }
+
+        if (bd.isSingleton()) {
+            Object bean = this.getSingleBean(beanID);
+            if (bean == null) {
+                bean = createBean(bd);
+                this.registerSingleton(beanID, bean);
+            }
+            return bean;
+        }
+
+        return createBean(bd);
+
+//        ClassLoader cl = this.getBeanClassLoader();
+//        String beanClassName = bd.getBeanClassName();
+//        try {
+//            Class<?> clz = cl.loadClass(beanClassName);
+//            return clz.newInstance();
+//        } catch (Exception e) {
+//            throw new BeanCreationException("create bean error", e);
+//        }
+    }
+
+    private Object createBean(BeanDefinition bd) {
         ClassLoader cl = this.getBeanClassLoader();
         String beanClassName = bd.getBeanClassName();
         try {
             Class<?> clz = cl.loadClass(beanClassName);
             return clz.newInstance();
         } catch (Exception e) {
-            throw new BeanCreationException("create bean error", e);
+            throw new BeanCreationException("create bean for " + beanClassName + " failed", e);
         }
     }
 

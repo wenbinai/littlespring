@@ -23,6 +23,7 @@ public class XmlBeanDefinitionReader {
      */
     public static final String ID_ATTRIBUTE = "id";
     public static final String NAME_ATTRIBUTE = "class";
+    public static final String SCOPE_ARRTIBUTE = "scope";
 
     BeanDefinitionRegistry registry;
 
@@ -45,6 +46,10 @@ public class XmlBeanDefinitionReader {
                 String id = ele.attributeValue(ID_ATTRIBUTE);
                 String beanClassName = ele.attributeValue(NAME_ATTRIBUTE);
                 GenericBeanDefinition bd = new GenericBeanDefinition(id, beanClassName);
+                // 对scope节点进行解析
+                if (ele.attribute(SCOPE_ARRTIBUTE) != null) {
+                    bd.setScope(ele.attributeValue(SCOPE_ARRTIBUTE));
+                }
                 this.registry.registerBeanDefinition(id, bd);
             }
         } catch (DocumentException e) {
@@ -79,7 +84,7 @@ public class XmlBeanDefinitionReader {
         } catch (Exception e) {
             throw new BeanDefinitionStoreException("parse xml exception");
         } finally {
-            if(is != null) {
+            if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
